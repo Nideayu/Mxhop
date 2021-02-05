@@ -9,7 +9,7 @@ from goods.view_base import GoodsListViewSet, CategoryViewSet
 from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views
 
-from user_operation.views import UserFavViewset
+from user_operation.views import UserFavViewset, LeavingMessageViewset, AddressViewset
 from users.views import SmsCodeViewset, UserViewset
 
 router = DefaultRouter()
@@ -24,7 +24,10 @@ router.register(r'userfavs', UserFavViewset, basename="userfavs")
 router.register(r'code', SmsCodeViewset,basename='code')
 # 配置用户注册url
 router.register(r'users', UserViewset, basename="users")
-
+# 配置用户留言的url
+router.register(r'messages', LeavingMessageViewset, basename="messages")
+# 配置收货地址
+router.register(r'address', AddressViewset, basename="address")
 urlpatterns = [
     path('xadmin/', xadmin.site.urls),
     path('api-auth/',include('rest_framework.urls')),
@@ -39,6 +42,5 @@ urlpatterns = [
     path('api-token-auth/', views.obtain_auth_token),
     # jwt的token认证接口
     path('login/', obtain_jwt_token),
-    path('docs',include_docs_urls(title='阿钰Shop')),
 ]
 

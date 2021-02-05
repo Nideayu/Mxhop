@@ -1,9 +1,6 @@
-from rest_framework.views import APIView
 from goods.serializers import CategorySerializer, GoodsSerializer
 from .models import Goods, GoodsCategory
-from rest_framework.response import Response
 from rest_framework import mixins
-from rest_framework import generics
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import viewsets
 from .filter import GoodsFilter
@@ -26,9 +23,14 @@ class GoodsPagination(PageNumberPagination):
 
 
 class GoodsListViewSet(mixins.ListModelMixin,viewsets.GenericViewSet,mixins.RetrieveModelMixin):
-    '商品列表页'
+    """
+    list:
+        商品列表，分页，搜索，过滤，排序
+    retrieve:
+        获取商品详情
+    """
 
-    #这里必须要定义一个默认的排序,否则会报错
+    # 这里必须要定义一个默认的排序,否则会报错
     queryset = Goods.objects.all()
     # 分页
     pagination_class = GoodsPagination
