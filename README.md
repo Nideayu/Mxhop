@@ -9,16 +9,23 @@ Sentry 完成线上系统的错误日志的监控和告警
 本地调试远程服务器代码的技巧
 1.2.系统构成
 vue前端项目
+
 django rest framework 系统实现前台功能
+
 xadmin后台管理系统
+
 vue部分:
 
 API 接口
+
 Vue 组件 与api的交互
+
 vue的项目组织结构分析
+
 Django Rest Framework 技能
 
 通用view实现 rest api接口
+
 
 apiview方式实现api
 genericView方式实现api接口
