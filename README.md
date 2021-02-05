@@ -1,13 +1,22 @@
 # Mxhop
 项目介绍
+
 1.1.掌握的技术
+
 Vue + Django Rest Framework 前后端分离技术
+
 彻底玩转restful api 开发流程
+
 Django Rest Framework 的功能实现和核心源码分析
+
 Sentry 完成线上系统的错误日志的监控和告警
+
 第三方登录和支付宝支付的集成
+
 本地调试远程服务器代码的技巧
+
 1.2.系统构成
+
 vue前端项目
 
 django rest framework 系统实现前台功能
