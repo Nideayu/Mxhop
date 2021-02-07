@@ -9,6 +9,7 @@ from goods.view_base import GoodsListViewSet, CategoryViewSet
 from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views
 
+from trade.views import ShoppingCartViewset, OrderViewset
 from user_operation.views import UserFavViewset, LeavingMessageViewset, AddressViewset
 from users.views import SmsCodeViewset, UserViewset
 
@@ -28,6 +29,10 @@ router.register(r'users', UserViewset, basename="users")
 router.register(r'messages', LeavingMessageViewset, basename="messages")
 # 配置收货地址
 router.register(r'address', AddressViewset, basename="address")
+# 配置购物车的url
+router.register(r'shopcarts', ShoppingCartViewset, basename="shopcarts")
+# 配置订单的url
+router.register(r'orders', OrderViewset, basename="orders")
 urlpatterns = [
     path('xadmin/', xadmin.site.urls),
     path('api-auth/',include('rest_framework.urls')),
