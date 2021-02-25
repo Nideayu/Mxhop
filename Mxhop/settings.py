@@ -17,16 +17,18 @@ import datetime
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+private_key_path = os.path.join(BASE_DIR, 'apps/trade/keys/private_2048.text')
+ali_pub_key_path = os.path.join(BASE_DIR, 'apps/trade/keys/alipay_key_2048.text')
 sys.path.insert(0,BASE_DIR)
 sys.path.insert(0,os.path.join(BASE_DIR, 'apps'))
 sys.path.insert(0,os.path.join(BASE_DIR, 'extra_apps'))
 AUTH_USER_MODEL = 'users.UserProfile'
 
-# jwt的认证接口
+# 认证
 AUTHENTICATION_BACKENDS = (
     'users.views.CustomBackend',
 
+    'django.contrib.auth.backends.ModelBackend'
 )
 # 有效期限
 JWT_AUTH = {
@@ -47,7 +49,7 @@ SECRET_KEY = 'n*yfbw9l&1lbzr_)r3&b_$!5@3%-$g5i%f$aw&at0lw&ch3dk='
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -186,3 +188,6 @@ STATIC_URL = '/static/'
 # 设置上传文件的路径
 MEDIA_URL="/media/"
 MEDIA_ROOT=os.path.join(BASE_DIR,"media")
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+)

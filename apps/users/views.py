@@ -20,11 +20,13 @@ User = get_user_model()
 class CustomBackend(ModelBackend):
     """
     自定义用户验证
-    # """
-    def authenticate(self, username=None, password=None, **kwargs):
+    """
+
+    def authenticate(self, request, username=None, password=None, **kwargs):
         try:
             # 用户名和手机都能登录
-            user = User.object.get(Q(username=username) | Q(mobile=username))
+            user = User.objects.get(
+                Q(username=username) | Q(mobile=username))
             if user.check_password(password):
                 return user
         except Exception as e:
@@ -50,13 +52,13 @@ class SmsCodeViewset(CreateModelMixin,viewsets.GenericViewSet):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        #验证合法
+        # 验证合法
         serializer.is_valid(raise_exception=True)
 
         mobile = serializer.validated_data["mobile"]
 
         yun_pian = YunPian(APIKEY)
-        #生成验证码
+        # 生成验证码
         code = self.generate_code()
 
         sms_status = yun_pian.send_sms(code=code, mobile=mobile)
@@ -74,9 +76,9 @@ class SmsCodeViewset(CreateModelMixin,viewsets.GenericViewSet):
 
 
 class UserViewset(CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
-    """
+    '''
     用户
-    """
+    '''
     serializer_class = UserRegSerializer
     queryset = User.objects.all()
     authentication_classes = (JSONWebTokenAuthentication, authentication.SessionAuthentication)

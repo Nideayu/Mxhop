@@ -7,6 +7,7 @@ from utils.permissions import IsOwnerOrReadOnly
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.authentication import SessionAuthentication
 
+
 class UserFavViewset(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin):
     '''
     用户收藏
@@ -68,5 +69,6 @@ class AddressViewset(viewsets.ModelViewSet):
     authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
     serializer_class = AddressSerializer
 
+    # 只能看到自己的留言
     def get_queryset(self):
         return UserAddress.objects.filter(user=self.request.user)
