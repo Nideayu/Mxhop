@@ -38,6 +38,32 @@ JWT_AUTH = {
 # 手机号码正则表达式
 REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
 
+# redis缓存
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+#缓存配置
+REST_FRAMEWORK_EXTENSIONS = {
+    'DEFAULT_CACHE_RESPONSE_TIMEOUT': 5   #5s过期，时间自己可以随便设定
+}
+
+REST_FRAMEWORK = {
+    # 限速设置
+    'DEFAULT_THROTTLE_CLASSES': (
+            'rest_framework.throttling.AnonRateThrottle',   # 未登陆用户
+            'rest_framework.throttling.UserRateThrottle'    # 登陆用户
+        ),
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '3/minute',         # 每分钟可以请求两次
+        'user': '5/minute'          # 每分钟可以请求五次
+    }
+}
 # 云片网APIKEY
 APIKEY = "87d1373030b87c24fcd196c898a481e1"
 # Quick-start development settings - unsuitable for production

@@ -1,3 +1,6 @@
+from rest_framework.response import Response
+from rest_framework_extensions.cache.mixins import CacheResponseMixin
+
 from goods.serializers import CategorySerializer, GoodsSerializer, BannerSerializer, IndexCategorySerializer
 from .models import Goods, GoodsCategory, Banner
 from rest_framework import mixins
@@ -6,7 +9,7 @@ from rest_framework import viewsets
 from .filter import GoodsFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
-
+from rest_framework.throttling import UserRateThrottle,AnonRateThrottle
 
 class GoodsPagination(PageNumberPagination):
     '''
@@ -22,29 +25,39 @@ class GoodsPagination(PageNumberPagination):
     max_page_size = 100
 
 
-class GoodsListViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
-    """
+class GoodsListViewSet(CacheResponseMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin,viewsets.GenericViewSet):
+    '''
     list:
         商品列表，分页，搜索，过滤，排序
     retrieve:
         获取商品详情
-    """
+    '''
 
+    # authentication_classes = (TokenAuthentication,)
     # 这里必须要定义一个默认的排序,否则会报错
-    queryset = Goods.objects.all()
+    queryset = Goods.objects.all().order_by('id')
     # 分页
     pagination_class = GoodsPagination
     # 序列化
     serializer_class = GoodsSerializer
     filter_backends = (DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter)
+    throttle_classes = (UserRateThrottle, AnonRateThrottle)
 
     # 设置filter的类为我们自定义的类
-    #过滤
+    # 过滤
     filter_class = GoodsFilter
-    # 搜索,=name表示精确搜索，也可以使用各种正则表达式
+    # 搜索
     search_fields = ('name', 'goods_brief', 'goods_desc')
     # 排序
     ordering_fields = ('sold_num', 'shop_price')
+
+    # 商品点击数 + 1
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.click_num += 1
+        instance.save()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
 
 class CategoryViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):

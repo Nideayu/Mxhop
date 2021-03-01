@@ -12,15 +12,15 @@ class UserFavViewset(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Crea
     '''
     用户收藏
     '''
-    # permission是用来做权限判断的
+    #permission是用来做权限判断的
     # IsAuthenticated：必须登录用户；IsOwnerOrReadOnly：必须是当前登录的用户
     permission_classes = (IsAuthenticated,IsOwnerOrReadOnly)
-    # auth使用来做用户认证的
+    #auth使用来做用户认证的
     authentication_classes = (JSONWebTokenAuthentication,SessionAuthentication)
-    # 搜索的字段
+    #搜索的字段
     lookup_field = 'goods_id'
 
-    # 动态选择serializer
+    #动态选择serializer
     def get_serializer_class(self):
         if self.action == "list":
             return UserFavDetailSerializer
@@ -29,9 +29,16 @@ class UserFavViewset(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Crea
         return UserFavSerializer
 
     def get_queryset(self):
-        # 只能查看当前登录用户的收藏，不会获取所有用户的收藏
+        #只能查看当前登录用户的收藏，不会获取所有用户的收藏
         return UserFav.objects.filter(user=self.request.user)
 
+    # 用户收藏的商品数量+1
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        # 这里instance相当于UserFav model，通过它找到goods
+        goods = instance.goods
+        goods.fav_num += 1
+        goods.save()
 
 class LeavingMessageViewset(mixins.ListModelMixin, mixins.DestroyModelMixin, mixins.CreateModelMixin,
                             viewsets.GenericViewSet):
